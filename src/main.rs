@@ -3,18 +3,35 @@ use std::{env, fs};
 fn main() {
     let args: Vec<String> = env::args().collect();
 
-    let command = &args[1];
-    let file_path = &args[2];
+    let config = Config::new(&args);
 
-    println!("Performing {command}");
-    println!("In file {file_path}");
+    let first_arg = &args[1];
 
-    if command.to_lowercase() == "append" {
+    println!("Performing {}", config.command);
+    println!("Performing {first_arg}");
+    println!("In file {}", config.file_path);
+
+    if config.command.to_lowercase() == "append" {
         let content = &args[3];
         println!("Appending {content}");
     }
 
-    let contents = fs::read_to_string(file_path).expect("Should have been able to read the file");
+    let contents =
+        fs::read_to_string(config.file_path).expect("Should have been able to read the file");
 
     println!("With text:\n{contents}")
+}
+
+struct Config {
+    command: String,
+    file_path: String,
+}
+
+impl Config {
+    fn new(args: &[String]) -> Config {
+        let command = args[1].clone();
+        let file_path = args[2].clone();
+
+        Config { command, file_path }
+    }
 }
