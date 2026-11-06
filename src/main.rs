@@ -1,9 +1,13 @@
+use std::process;
 use std::{env, fs};
 
 fn main() {
     let args: Vec<String> = env::args().collect();
 
-    let config = Config::new(&args);
+    let config = Config::build(&args).unwrap_or_else(|err| {
+        println!("Problem parsing arguments: {err}");
+        process::exit(1);
+    });
 
     let first_arg = &args[1];
 
@@ -28,10 +32,14 @@ struct Config {
 }
 
 impl Config {
-    fn new(args: &[String]) -> Config {
+    fn build(args: &[String]) -> Result<Config, &'static str> {
+        if args.len() < 4 {
+            return Err("not enough arguments");
+        }
+
         let command = args[1].clone();
         let file_path = args[2].clone();
 
-        Config { command, file_path }
+        Ok(Config { command, file_path })
     }
 }
