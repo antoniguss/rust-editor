@@ -1,3 +1,4 @@
+use std::error::Error;
 use std::process;
 use std::{env, fs};
 
@@ -9,21 +10,25 @@ fn main() {
         process::exit(1);
     });
 
-    let first_arg = &args[1];
-
     println!("Performing {}", config.command);
-    println!("Performing {first_arg}");
     println!("In file {}", config.file_path);
 
-    if config.command.to_lowercase() == "append" {
-        let content = &args[3];
-        println!("Appending {content}");
+    if let Err(e) = run(config) {
+        println!("Application error: {e}");
+        process::exit(1);
     }
+}
 
-    let contents =
-        fs::read_to_string(config.file_path).expect("Should have been able to read the file");
+fn run(config: Config) -> Result<(), Box<dyn Error>> {
+    // if config.command.to_lowercase() == "append" {
+    //     let content = &args[3];
+    //     println!("Appending {content}");
+    // }
 
-    println!("With text:\n{contents}")
+    let contents = fs::read_to_string(config.file_path)?;
+
+    println!("With text:\n{contents}");
+    Ok(())
 }
 
 struct Config {
