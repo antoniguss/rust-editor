@@ -1,4 +1,4 @@
-use std::env;
+use std::{env, fs};
 
 fn main() {
     let args: Vec<String> = env::args().collect();
@@ -13,4 +13,8 @@ fn main() {
         let content = &args[3];
         println!("Appending {content}");
     }
+
+    let contents = fs::read_to_string(file_path).expect("Should have been able to read the file");
+
+    println!("With text:\n{contents}")
 }
