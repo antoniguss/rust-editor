@@ -22,12 +22,9 @@ fn main() {
 }
 
 fn run(config: Config) -> Result<(), Box<dyn Error>> {
-    // if config.command.to_lowercase() == "append" {
-    //     let content = &args[3];
-    //     println!("Appending {content}");
-    // }
-
-    append(&config.file_path, &config.contents);
+    if "append" == config.command {
+        append(&config.file_path, &config.contents)?;
+    }
 
     Ok(())
 }
